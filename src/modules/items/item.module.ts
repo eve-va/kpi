@@ -1,5 +1,5 @@
-import { Module } from 'src/common/decorators/module.decorator';
-import { ItemRepositoryModule } from './repository/item.repository';
+import { Module } from '@nestjs/common';
+import { ItemRepositoryModule } from './repository/item.repository.module';
 import { ItemController } from './item.controller';
 import { ItemService } from './item.service';
 

@@ -1,5 +1,5 @@
-import { Module } from 'src/common/decorators/module.decorator';
-import { OrderRepositoryModule } from './repository/order.repository';
+import { Module } from '@nestjs/common';
+import { OrderRepositoryModule } from './repository/order.repository.module';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 

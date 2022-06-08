@@ -1,5 +1,5 @@
-import { Module } from 'src/common/decorators/module.decorator';
-import { UserRepositoryModule } from './repository/user.repository';
+import { Module } from '@nestjs/common';
+import { UserRepositoryModule } from './repository/user.repository.module';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
