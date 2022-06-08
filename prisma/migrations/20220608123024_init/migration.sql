@@ -36,6 +36,7 @@ CREATE TABLE "User" (
     "firstName" TEXT,
     "lastName" TEXT,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "roles" JSONB,
     "hashedRefreshToken" TEXT,
 
