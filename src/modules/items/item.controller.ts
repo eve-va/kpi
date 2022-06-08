@@ -3,7 +3,7 @@ import { Item } from '@prisma/client';
 import { ItemCreateInput } from './dto/item.create.dto';
 import { ItemService } from './item.service';
 
-@Controller('item')
+@Controller('Item')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
