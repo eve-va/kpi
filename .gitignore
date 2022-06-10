@@ -1,4 +1,5 @@
 /src/config/http
+*.txt
 
 # compiled output
 /dist
