@@ -1,4 +1,4 @@
-import { IsIn, IsNumber, IsString } from 'class-validator';
+import { IsIn, IsString } from 'class-validator';
 
 export class ItemCreateInput {
   @IsString()
@@ -9,12 +9,6 @@ export class ItemCreateInput {
 
   @IsString()
   description: string;
-
-  @IsNumber()
-  stock: number;
-
-  @IsNumber()
-  price: number;
 
   @IsString()
   cover?: string;
