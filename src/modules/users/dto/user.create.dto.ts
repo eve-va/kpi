@@ -9,9 +9,6 @@ export class CreateUserDto {
 
   @IsString()
   lastName: string;
-
-  @IsString()
-  password: string;
 }
    
 export default CreateUserDto;

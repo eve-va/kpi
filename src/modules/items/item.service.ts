@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Item, Prisma, Review } from '@prisma/client';
+import { Item, Prisma } from '@prisma/client';
 import { ImageService } from 'src/modules/images/image.service';
 import { ItemCreateInput } from './dto/item.create.dto';
-import { ReviewCreateInput } from './dto/review.create.dto';
 import { ItemRepositoryService } from './repository/item.repository.service';
 
 @Injectable()
@@ -51,24 +50,5 @@ export class ItemService {
     if (id) {
       await this.imageService.deleteImage({ id });
     }
-  }
-
-  public async getReviews(where?: Prisma.ReviewWhereInput, limit?: number, offset?: number): Promise<Review[]> {
-    return this.itemRepository.getReviews(where, limit, offset);
-  }
-
-  public async createReview(data: ReviewCreateInput): Promise<Review> {
-    return this.itemRepository.createReview(data);
-  }
-
-  async updateReview(
-    where: Prisma.ReviewWhereUniqueInput,
-    data: ReviewCreateInput
-  ): Promise<Review> {
-    return await this.itemRepository.updateReview(where, data);
-  }
-
-  async deleteReview(where: Prisma.ReviewWhereUniqueInput): Promise<void> {
-    await this.itemRepository.deleteReview(where);
   }
 }

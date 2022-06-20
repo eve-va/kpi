@@ -6,7 +6,6 @@ import CreateUserDto from '../users/dto/user.create.dto';
 import { UserService } from '../users/user.service';
 import { JWTPayload } from './interfaces/jwtPayload.interface';
 import { UserAuthInfo } from './interfaces/userAuthInfo.interface';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -17,11 +16,7 @@ export class AuthService {
   ) {}
 
   public async signup(data: CreateUserDto): Promise<string> {
-    const hashedPassword = await bcrypt.hash(data.password, 10);
-    const createdUser = await this.userService.createUser({
-      ...data,
-      password: hashedPassword
-    });
+    const createdUser = await this.userService.createUser(data);
     if (!createdUser) {
       //UserAlreadyExistsError
     }
@@ -40,6 +35,9 @@ export class AuthService {
 
   public async login(user: UserAuthInfo): Promise<string> {
     const payload = await this.getUserAndFormPayload(user.email);
+    if (!payload) {
+      return this.signup(user);
+    }
     const accessToken = this.jwtService.sign(payload);
     return accessToken;
   }
@@ -61,8 +59,8 @@ export class AuthService {
 
   private async getUserAndFormPayload(email: string): Promise<JWTPayload> {
     const userFetched = await this.userService.findByEmail(email);
-    if (!userFetched) {
-      //UserNotFoundError
+    if (!userFetched) { 
+      return null;
     }
 
     const payload: JWTPayload = {

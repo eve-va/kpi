@@ -1,20 +1,32 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { Item, Review } from '@prisma/client';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Item } from '@prisma/client';
 import { ItemCreateInput } from './dto/item.create.dto';
 import { ItemService } from './item.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ReviewCreateInput } from './dto/review.create.dto';
+import { ApiBearerAuth, ApiCreatedResponse, ApiExtraModels, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ItemGetSchema } from './swagger/GET/schemas/items.schema';
+import { ItemsGetResponse } from './swagger/GET/items';
+import { ItemsPostResponse } from './swagger/POST/items';
+import { ItemsPatchResponse } from './swagger/PATCH/items';
+import { ItemsDeleteResponse } from './swagger/DELETE/items';
+import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 
-@Controller('Item')
+@ApiTags('Item')
+@Controller('item')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Get()
+  @ApiExtraModels(ItemGetSchema)
+  @ApiOkResponse(ItemsGetResponse)
   async getItems(): Promise<Item[]> {
     return this.itemService.getItems();
   }
 
   @Post()
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  @ApiCreatedResponse(ItemsPostResponse)
   @UseInterceptors(FileInterceptor('cover'))
   async createItem(@Body() data: ItemCreateInput, @UploadedFile() file?: Express.Multer.File,): Promise<Item> {
     if (file) {
@@ -26,6 +38,9 @@ export class ItemController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse(ItemsPatchResponse)
   @UseInterceptors(FileInterceptor('cover'))
   async updateItem(
     @Param('id', ParseUUIDPipe) id: string,
@@ -46,41 +61,10 @@ export class ItemController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse(ItemsDeleteResponse)
   async deleteItem(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return await this.itemService.deleteItem({ id });
-  }
-
-  //item or user id
-  @Get(':id')
-  async getReviews(@Param('id', ParseUUIDPipe) id: string): Promise<Review[]> {
-    return this.itemService.getReviews({ id });
-  }
-
-  //user decorator
-  // @Post(':itemId')
-  // async createReview(
-  //   @Param('itemId', ParseUUIDPipe) itemId: string,
-  //   @Body() data: ReviewCreateInput
-  // ): Promise<Review> {
-  //   const reviewData = {
-  //     itemId,
-  //     ...data
-  //   }
-  //   return this.itemService.createReview(reviewData);
-  // }
-
-  //perhaps separate module
-  @Patch(':reviewId')
-  async updateReview(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() data: ReviewCreateInput,
-  ) {
-    return await this.itemService.updateReview({ id }, data);
-  }
-
-  //sm
-  @Delete(':reviewId')
-  async deleteReview(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
-    return await this.itemService.deleteReview({ id });
   }
 }

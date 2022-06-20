@@ -14,8 +14,8 @@ import { DocumentBuilder, SwaggerModule, OpenAPIObject } from '@nestjs/swagger';
   application.use(cookieParser());
 
   const config: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
-    .setTitle('BookStore')
-    .setDescription('Book Store')
+    .setTitle('BookSite')
+    .setDescription('Book Site')
     .setVersion('0.0.1')
     .addBearerAuth(
       {

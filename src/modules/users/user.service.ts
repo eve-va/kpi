@@ -8,8 +8,8 @@ import * as bcrypt from 'bcrypt';
 export class UserService {
   constructor(private readonly userRepository: UserRepositoryService) {}
 
-  public async getUsers(): Promise<User[]> {
-    return this.userRepository.getUsers();
+  public async getUser(id: string): Promise<User> {
+    return this.userRepository.getUser({ id });
   }
 
   public async createUser(data: CreateUserDto): Promise<User> {
@@ -21,22 +21,6 @@ export class UserService {
     if (!user) {
       //UserNotFoundError
     }
-    return user;
-  }
-
-  async getUserIfPasswordMatches(email: string, hashedPassword: string): Promise<User> {
-    const user = await this.userRepository.findByEmail(email);
-    if (!user) {
-      //WrongCredentialsError
-    }
-    const isPasswordMatching = await bcrypt.compare(
-      hashedPassword,
-      user.password
-    );
-    if (!isPasswordMatching) {
-      //WrongCredentialsError
-    }
-    user.password = undefined;
     return user;
   }
 

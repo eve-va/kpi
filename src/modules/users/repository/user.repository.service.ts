@@ -6,21 +6,12 @@ import { PrismaService } from 'src/common/modules/prisma/prisma.service';
 export class UserRepositoryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async getUsers(
-    where?: Prisma.UserWhereInput,
-    limit?: number,
-    offset = 0,
-  ): Promise<User[]> {
-    return this.prisma.user.findMany({
-      where,
-      skip: offset,
-      take: limit,
-    });
+  public async getUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    return this.prisma.user.findUnique({ where });
   }
 
   public async createUser(data: Prisma.UserCreateInput): Promise<User> {
     const user = this.prisma.user.create({ data });
-    (await user).password = undefined;
     return user;
   }
 

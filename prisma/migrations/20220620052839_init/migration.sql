@@ -5,14 +5,16 @@ CREATE TYPE "ORDER_STATUS" AS ENUM ('FORMED', 'PAID', 'DISPATCHED');
 CREATE TYPE "GENRE" AS ENUM ('FANTASY', 'SCIFI', 'MYSTERY', 'ADVENTURE', 'HORROR');
 
 -- CreateTable
-CREATE TABLE "Order" (
+CREATE TABLE "Review" (
     "id" UUID NOT NULL,
     "userId" UUID NOT NULL,
-    "status" "ORDER_STATUS" NOT NULL DEFAULT E'FORMED',
+    "itemId" UUID NOT NULL,
+    "content" TEXT NOT NULL,
+    "rating" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Review_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -22,10 +24,9 @@ CREATE TABLE "Item" (
     "author" TEXT NOT NULL,
     "genre" "GENRE" NOT NULL,
     "description" TEXT NOT NULL,
+    "cover" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "orderId" UUID,
-    "userId" UUID,
 
     CONSTRAINT "Item_pkey" PRIMARY KEY ("id")
 );
@@ -36,21 +37,26 @@ CREATE TABLE "User" (
     "firstName" TEXT,
     "lastName" TEXT,
     "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
     "roles" JSONB,
     "hashedRefreshToken" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Image" (
+    "id" UUID NOT NULL,
+    "url" TEXT NOT NULL,
+    "key" TEXT NOT NULL,
+
+    CONSTRAINT "Image_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_itemId_fkey" FOREIGN KEY ("itemId") REFERENCES "Item"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Item" ADD CONSTRAINT "Item_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Item" ADD CONSTRAINT "Item_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
