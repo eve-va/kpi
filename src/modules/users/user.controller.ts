@@ -9,7 +9,7 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get(':userId')
+  @Get(':id')
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   async getUser(@Param('id', ParseUUIDPipe) id: string): Promise<User> {

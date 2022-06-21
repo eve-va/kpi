@@ -14,7 +14,7 @@ export const AuthConfig = (): IAuthConfig => {
     GOOGLE: {
       GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
       GOOGLE_SECRET: process.env.GOOGLE_SECRET as string,
-      CALLBACK_URL: process.env.CALLBACK_URL || 'http://localhost:3000/api/auth/redirect',
+      CALLBACK_URL: process.env.CALLBACK_URL || 'http://localhost:5000/auth/redirect',
     },
     UTIL: {
       LEVERX_WHITELIST: process.env.LEVERX_WHITELIST === 'true',

@@ -8,7 +8,7 @@ import { DocumentBuilder, SwaggerModule, OpenAPIObject } from '@nestjs/swagger';
 (async (): Promise<void> => {
   const application: INestApplication = await NestFactory.create(AppModule);
   const configService: ConfigService = application.get<ConfigService>(ConfigService);
-  const port = configService.get<number>('PORT') || 3000;
+  const port = configService.get<number>('PORT') || 5000;
 
   application.useGlobalPipes(new ValidationPipe());
   application.use(cookieParser());
