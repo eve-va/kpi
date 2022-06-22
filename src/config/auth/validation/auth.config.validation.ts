@@ -1,8 +1,7 @@
 import { plainToClass, Type } from 'class-transformer';
 import { IsDefined, ValidateNested, validateSync } from 'class-validator';
-// import { ConfigMandatoryFieldError } from 'src/common/errors/configMandatoryField.error';
-// import { configErrorMessageBuilder } from 'src/config/common/errorMessageBuilder';
 import { IAuthConfig, IGoogleConfig } from '../interfaces/auth.config.interface';
+import { ConfigMandatoryFieldError } from './auth.error';
 
 class GoogleConfig implements Omit<IGoogleConfig, 'CALLBACK_URL'> {
   @IsDefined()
@@ -42,8 +41,8 @@ class AuthConfig implements IAuthConfig {
 export function validate(config: Record<string, unknown>): AuthConfig {
   const validatedConfig = plainToClass(AuthConfig, config, { enableImplicitConversion: true });
   const errors = validateSync(validatedConfig, { skipMissingProperties: false });
-  // if (errors.length) {
-  //   throw new ConfigMandatoryFieldError('Auth', configErrorMessageBuilder(errors));
-  // }
+  if (errors.length) {
+    throw new ConfigMandatoryFieldError('Auth');
+  }
   return validatedConfig;
 }

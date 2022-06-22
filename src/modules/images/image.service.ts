@@ -30,7 +30,6 @@ export class ImageService {
       key: uploadResult.Key,
       url: uploadResult.Location,
     });
-    console.log('file' + newFile);
     return newFile;
   }
 

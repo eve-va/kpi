@@ -1,4 +1,4 @@
-import { Controller, Get, MisdirectedException, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, MisdirectedException, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request } from 'express';
 import { JwtRefreshGuard } from './guards/jwtRefresh.guard';
@@ -28,7 +28,7 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   public async googleAuthRedirect(@Req() req: Request): Promise<string> {
     if (!req.user) {
-      //NoUserFromGoogleError
+      throw new HttpException('No user from google', HttpStatus.NOT_FOUND);
     }
     const accessToken = await this.authService.login(req.user);
     const refreshToken = await this.authService.getJwtRefreshToken(req.user);
@@ -41,7 +41,7 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   public async refresh(@Req() req: Request): Promise<string> {
     if (!req.user) {
-      //NoUserOnRequestObjectError
+      throw new HttpException('No user on request object', HttpStatus.BAD_REQUEST);
     }
     const accessToken = await this.authService.login(req.user);
     return accessToken;
@@ -53,7 +53,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async logout(@Req() req: Request): Promise<void> {
     if (!req.user) {
-      //NoUserOnRequestObjectError
+      throw new HttpException('No user on request object', HttpStatus.BAD_REQUEST);
     }
     const logOutCookie = await this.authService.logout(req.user);
     req.res?.setHeader('Set-Cookie', logOutCookie);

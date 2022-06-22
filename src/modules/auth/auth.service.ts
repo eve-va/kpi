@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { IRefreshJWTConfig } from 'src/config/auth/interfaces/auth.config.interface';
 import CreateUserDto from '../users/dto/user.create.dto';
+import { UserAlreadyExistsError } from '../users/errors/user.error';
 import { UserService } from '../users/user.service';
 import { JWTPayload } from './interfaces/jwtPayload.interface';
 import { UserAuthInfo } from './interfaces/userAuthInfo.interface';
@@ -18,7 +19,7 @@ export class AuthService {
   public async signup(data: CreateUserDto): Promise<string> {
     const createdUser = await this.userService.createUser(data);
     if (!createdUser) {
-      //UserAlreadyExistsError
+      throw new UserAlreadyExistsError('email', data.email);
     }
 
     const payload: JWTPayload = {

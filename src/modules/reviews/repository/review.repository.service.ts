@@ -6,6 +6,18 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 export class ReviewRepositoryService {
   constructor(private readonly prisma: PrismaService) {}
 
+  public async getReviews(
+    where: Prisma.ReviewWhereInput,
+    limit?: number,
+    offset = 0,
+  ): Promise<Review[]> {
+    return this.prisma.review.findMany({
+      where,
+      skip: offset,
+      take: limit,
+    });
+  }
+
   public async createReview(data: Prisma.ReviewCreateInput): Promise<Review> {
     return this.prisma.review.create({ data });
   }

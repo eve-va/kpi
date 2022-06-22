@@ -3,6 +3,7 @@ import { Prisma, User } from '@prisma/client';
 import { UserRepositoryService } from './repository/user.repository.service';
 import CreateUserDto from './dto/user.create.dto';
 import * as bcrypt from 'bcrypt';
+import { RefreshTokenDoesNotMatchError, UserNotFoundError } from './errors/user.error';
 
 @Injectable()
 export class UserService {
@@ -19,7 +20,7 @@ export class UserService {
   async findByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
-      //UserNotFoundError
+      throw new UserNotFoundError('email', email);
     }
     return user;
   }
@@ -27,12 +28,12 @@ export class UserService {
   async getUserIfRefreshTokenMatches(email: string, refreshToken: string): Promise<User> {
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
-      //UserNotFoundError
+      throw new UserNotFoundError('email', email);
     }
 
     const isRefreshTokenMatching = await bcrypt.compare(refreshToken, user?.hashedRefreshToken as string);
     if (!isRefreshTokenMatching) {
-      //RefreshTokenDoesNotMatchError
+      throw new RefreshTokenDoesNotMatchError('email', email);
     }
     return user;
   }

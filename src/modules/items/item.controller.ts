@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Item } from '@prisma/client';
 import { ItemCreateInput } from './dto/item.create.dto';
 import { ItemService } from './item.service';
@@ -14,7 +14,6 @@ import { ItemUpdateInput } from './dto/item.update.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRoles } from '../auth/constants/auth.constants';
-import { Request } from 'express';
 
 @ApiTags('Item')
 @Controller('item')
@@ -34,8 +33,7 @@ export class ItemController {
   @Roles(UserRoles.ADMIN)
   @ApiCreatedResponse(ItemsPostResponse)
   @UseInterceptors(FileInterceptor('cover'))
-  async createItem(@Body() data: ItemCreateInput, @Req() req: Request, @UploadedFile() file?: Express.Multer.File): Promise<Item> {
-    console.log('user' + JSON.stringify(req.user));
+  async createItem(@Body() data: ItemCreateInput, @UploadedFile() file?: Express.Multer.File): Promise<Item> {
     if (file) {
       const buffer = file.buffer;
       const filename = file.originalname;

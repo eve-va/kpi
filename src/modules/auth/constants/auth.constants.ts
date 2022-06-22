@@ -6,5 +6,5 @@ export enum GuardTypes {
 }
 
 export enum UserRoles {
-  ADMIN = 'admin'
+  ADMIN = 'Admin'
 }
