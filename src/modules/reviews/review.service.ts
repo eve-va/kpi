@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, Review } from '@prisma/client';
 import { ReviewCreateInput } from '../reviews/dto/review.create.dto';
+import { ReviewUpdateInput } from './dto/review.update.dto';
 import { ReviewRepositoryService } from './repository/review.repository.service';
 
 @Injectable()
@@ -15,7 +16,7 @@ export class ReviewService {
     
     async updateReview(
       where: Prisma.ReviewWhereUniqueInput,
-      data: ReviewCreateInput
+      data: ReviewUpdateInput
     ): Promise<Review> {
       return await this.reviewRepository.updateReview(where, data);
     }

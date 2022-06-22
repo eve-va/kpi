@@ -13,7 +13,7 @@ export class ImageService {
     private imageRepository: ImageRepositoryService,
     private configService: ConfigService,
   ) {
-    this.AWS_PUBLIC_BUCKET_NAME = this.configService.get<string>('AWS');
+    this.AWS_PUBLIC_BUCKET_NAME = this.configService.get<string>('AWS_PUBLIC_BUCKET_NAME');
   }
 
   async uploadImage(dataBuffer: Buffer, filename: string): Promise<Image> {
@@ -30,6 +30,7 @@ export class ImageService {
       key: uploadResult.Key,
       url: uploadResult.Location,
     });
+    console.log('file' + newFile);
     return newFile;
   }
 

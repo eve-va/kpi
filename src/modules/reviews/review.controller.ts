@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nest
 import { Review } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { ReviewCreateInput } from '../reviews/dto/review.create.dto';
+import { ReviewUpdateInput } from './dto/review.update.dto';
 import { ReviewService } from './review.service';
 import { ReviewsDeleteResponse } from './swagger/DELETE/reviews';
 import { ReviewsPatchResponse } from './swagger/PATCH/reviews';
@@ -28,17 +29,17 @@ export class ReviewController {
     return this.reviewService.createReview(reviewData);
   }
 
-  @Patch(':reviewId')
+  @Patch(':id')
   @ApiBearerAuth('access-token')
   @ApiOkResponse(ReviewsPatchResponse)
   async updateReview(
   @Param('id', ParseUUIDPipe) id: string,
-  @Body() data: ReviewCreateInput,
+  @Body() data: ReviewUpdateInput,
   ) {
   return await this.reviewService.updateReview({ id }, data);
   }
 
-  @Delete(':reviewId')
+  @Delete(':id')
   @ApiBearerAuth('access-token')
   @ApiOkResponse(ReviewsDeleteResponse)
   async deleteReview(@Param('id', ParseUUIDPipe) id: string): Promise<void> {

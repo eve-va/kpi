@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Item, Prisma } from '@prisma/client';
 import { ImageService } from 'src/modules/images/image.service';
 import { ItemCreateInput } from './dto/item.create.dto';
+import { ItemUpdateInput } from './dto/item.update.dto';
 import { ItemRepositoryService } from './repository/item.repository.service';
 
 @Injectable()
@@ -22,14 +23,14 @@ export class ItemService {
       cover: cover.id,
       ...data,
     };
-    this.itemRepository.createItem(recordWithCover);
+    return this.itemRepository.createItem(recordWithCover);
   }
     return this.itemRepository.createItem(data);
   }
 
   async updateItem(
     where: Prisma.ItemWhereUniqueInput,
-    data: ItemCreateInput,
+    data: ItemUpdateInput,
     buffer?: Buffer,
     filename?: string,
   ): Promise<Item> {

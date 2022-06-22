@@ -1,30 +1,33 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsOptional, IsString } from 'class-validator';
 
-export class ItemCreateInput {
+export class ItemUpdateInput {
   @IsString()
+  @IsOptional()
   @ApiProperty({
     description: "Item's title",
-    required: true,
+    required: false,
     example: 'Lord of the rings',
   })
-  title: string;
+  title?: string;
 
   @IsString()
+  @IsOptional()
   @ApiProperty({
     description: "Item's author",
-    required: true,
+    required: false,
     example: 'J. R. R. Tolkien',
   })
-  author: string;
+  author?: string;
 
   @IsString()
+  @IsOptional()
   @ApiProperty({
     description: "Skill's description",
-    required: true,
+    required: false,
     example: 'Short description',
   })
-  description: string;
+  description?: string;
 
   @IsOptional()
   @ApiProperty({
@@ -35,11 +38,12 @@ export class ItemCreateInput {
   cover?: any;
 
   @IsIn(['FANTASY', 'SCIFI', 'MYSTERY', 'ADVENTURE', 'HORROR'])
+  @IsOptional()
   @ApiProperty({
     description: "Item's genre",
     enum: ['FANTASY', 'SCIFI', 'MYSTERY', 'ADVENTURE', 'HORROR'],
-    required: true,
+    required: false,
     example: 'FANTASY',
   })
-  genre: 'FANTASY' | 'SCIFI' | 'MYSTERY' | 'ADVENTURE' | 'HORROR';
+  genre?: 'FANTASY' | 'SCIFI' | 'MYSTERY' | 'ADVENTURE' | 'HORROR';
 }

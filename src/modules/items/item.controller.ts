@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Item } from '@prisma/client';
 import { ItemCreateInput } from './dto/item.create.dto';
 import { ItemService } from './item.service';
@@ -10,6 +10,11 @@ import { ItemsPostResponse } from './swagger/POST/items';
 import { ItemsPatchResponse } from './swagger/PATCH/items';
 import { ItemsDeleteResponse } from './swagger/DELETE/items';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
+import { ItemUpdateInput } from './dto/item.update.dto';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UserRoles } from '../auth/constants/auth.constants';
+import { Request } from 'express';
 
 @ApiTags('Item')
 @Controller('item')
@@ -25,10 +30,12 @@ export class ItemController {
 
   @Post()
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRoles.ADMIN)
   @ApiCreatedResponse(ItemsPostResponse)
   @UseInterceptors(FileInterceptor('cover'))
-  async createItem(@Body() data: ItemCreateInput, @UploadedFile() file?: Express.Multer.File,): Promise<Item> {
+  async createItem(@Body() data: ItemCreateInput, @Req() req: Request, @UploadedFile() file?: Express.Multer.File): Promise<Item> {
+    console.log('user' + JSON.stringify(req.user));
     if (file) {
       const buffer = file.buffer;
       const filename = file.originalname;
@@ -39,12 +46,13 @@ export class ItemController {
 
   @Patch(':id')
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRoles.ADMIN)
   @ApiOkResponse(ItemsPatchResponse)
   @UseInterceptors(FileInterceptor('cover'))
   async updateItem(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() data: ItemCreateInput,
+    @Body() data: ItemUpdateInput,
     @UploadedFile() file?: Express.Multer.File,
   ) {
     if (file) {
@@ -62,7 +70,8 @@ export class ItemController {
 
   @Delete(':id')
   @ApiBearerAuth('access-token')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRoles.ADMIN)
   @ApiOkResponse(ItemsDeleteResponse)
   async deleteItem(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return await this.itemService.deleteItem({ id });

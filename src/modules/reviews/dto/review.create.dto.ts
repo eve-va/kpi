@@ -20,13 +20,6 @@ export class ReviewCreateInput {
 
   @IsString()
   @ApiProperty({
-    description: "Review's item id",
-    example: 'uuid',
-  })
-  itemId: string;
-
-  @IsString()
-  @ApiProperty({
     description: "Review's author id",
     example: 'uuid',
   })

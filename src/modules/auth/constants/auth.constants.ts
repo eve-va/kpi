@@ -4,3 +4,7 @@ export enum GuardTypes {
   GOOGLE = 'google',
   LOCAL = 'local'
 }
+
+export enum UserRoles {
+  ADMIN = 'admin'
+}
